@@ -3,33 +3,44 @@ import yaml
 import time
 
 
-
 with open("config.yaml", "r") as stream:
     config = yaml.safe_load(stream)
+
+web = Web3(Web3.HTTPProvider(config['INFURA']['RINKEBY']))
+
 
 
 def main():
 
-    web = Web3(Web3.HTTPProvider(config['INFURA']['RINKEBY']))
     block_interval = 13
-
     remainder = (web.eth.blockNumber - 420) % 1000
 
-    if remainder < 100:
-        wait = (1000 - remainder - 20) * 13
+    if remainder == 0:
+        for account in config['wallet']:
+            send_tx(web, account['PUBLIC_KEY'], account['PRIVATE_KEY'])
+            print(f"Tx sent for: {account['PUBLIC_KEY']}")
+
+        # Wait until ~25 blocks before start time
+        wait = (975) * block_interval
+        print(f"Sleeping for {wait} seconds")
         time.sleep(wait)
 
+    elif remainder < 975:
+        wait = (1000 - remainder - 25) * block_interval
+        print(f"Sleeping for {wait} seconds")
+        time.sleep(wait)
 
-    if remainder != 0:
-        print('It does not equal 0')
+    else:  # remainder != 0
+        time.sleep(1)
 
+    return True
 
 
 def send_tx(web, public_key, private_key):
     tx = {'to': public_key,
           'value': 0,
           'gas': 21032,
-          'gasPrice': 150 *10**9 ,
+          'gasPrice': 120 * 10**9 ,
           'data': 420,
           'nonce': web.eth.getTransactionCount(public_key)}
 
@@ -40,4 +51,5 @@ def send_tx(web, public_key, private_key):
 
 
 if __name__ == "__main__":
-    main()
+    while True:
+        main()
