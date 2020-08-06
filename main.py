@@ -6,7 +6,7 @@ import time
 with open("config.yaml", "r") as stream:
     config = yaml.safe_load(stream)
 
-web = Web3(Web3.HTTPProvider(config['INFURA']['RINKEBY']))
+web = Web3(Web3.HTTPProvider(config['INFURA']['MAINNET']))
 
 
 
@@ -30,7 +30,7 @@ def main():
         print(f"Sleeping for {wait} seconds")
         time.sleep(wait)
 
-    else:  # remainder != 0
+    else:  # Check every second for the last 25 blocks up to 420
         time.sleep(1)
 
     return True
@@ -47,7 +47,7 @@ def send_tx(web, public_key, private_key):
     signed = web.eth.account.signTransaction(tx, private_key=private_key)
     web.eth.sendRawTransaction(signed.rawTransaction)
 
-    return
+    return True
 
 
 if __name__ == "__main__":
