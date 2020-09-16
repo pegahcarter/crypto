@@ -1,9 +1,0 @@
-INFURA:
-    MAINNET: https://mainnet.infura.io/v3/{endpoint}
-    RINKEBY: https://rinkeby.infura.io/v3/{endpoint}
-
-wallet:
-    - PUBLIC_KEY: "0x123..."
-      PRIVATE_KEY: ""
-    - PUBLIC_KEY: "0xabc..."
-      PRIVATE_KEY: ""
